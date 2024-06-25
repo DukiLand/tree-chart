@@ -19,7 +19,7 @@
             top: formatDimension(
               direction === Direction.VERTICAL ? node.y : node.x
             ),
-            width: formatDimension(config.nodeWidth),
+            width: formatDimension(this.divWidth),
             height: formatDimension(config.nodeHeight),
           }"
         >
@@ -64,7 +64,9 @@ export default {
         return {
           nodeWidth: DEFAULT_NODE_WIDTH,
           nodeHeight: DEFAULT_NODE_HEIGHT,
-          levelHeight: DEFAULT_LEVEL_HEIGHT,
+          // levelHeight: DEFAULT_LEVEL_HEIGHT,
+          xAxisGap: DEFAULT_NODE_WIDTH,
+          yAxisGap: DEFAULT_LEVEL_HEIGHT
         };
       },
     },
@@ -93,6 +95,7 @@ export default {
       treeChartCore: null,
       nodeDataList: [],
       initialTransformStyle: {},
+      divWidth: DEFAULT_NODE_WIDTH
     };
   },
   mounted() {
@@ -104,6 +107,15 @@ export default {
   },
   methods: {
     init() {
+      this.divWidth = this.config.nodeWidth;
+      if (this.config.direction === Direction.VERTICAL) {
+        this.config.levelHeight = this.config.yAxisGap;
+        this.config.nodeWidth = this.config.xAxisGap;
+      } else {
+        this.config.levelHeight = this.config.xAxisGap;
+        this.config.nodeWidth = this.config.yAxisGap;
+      }
+
       this.treeChartCore = new TreeChartCore({
         svgElement: this.$refs.svg,
         domElement: this.$refs.domContainer,
